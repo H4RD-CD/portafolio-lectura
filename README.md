@@ -1,1 +1,313 @@
-# portafolio-lectura
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Portafolio de Lectura y Escritura - Eduardo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #0b0b0e;
+      --panel: #121218;
+      --card: #1a1a22;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #22c55e;
+      --accent-2: #06b6d4;
+      --radius: 16px;
+      --shadow: 0 12px 28px rgba(0,0,0,.45);
+      --ring: 0 0 0 3px rgba(34,197,94,.25);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    header {
+      min-height: 50vh;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(180deg,#0f0f15,#0b0b0e);
+      border-bottom: 1px solid #1f2937;
+    }
+
+    .hero-content {
+      max-width: 900px;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .hero-content h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    .hero-content p {
+      color: var(--muted);
+      font-size: 1.1rem;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 32px auto;
+      padding: 0 16px;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .zone {
+      background: var(--panel);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      border: 1px solid #1f2937;
+    }
+
+    .zone-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .zone-header h2 {
+      margin: 0;
+    }
+
+    .btn {
+      border: none;
+      background: linear-gradient(180deg, #22c55e, #16a34a);
+      color: #052e16;
+      padding: 10px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn.secondary {
+      background: #0b0b0e;
+      color: var(--text);
+      border: 1px solid #374151;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 14px;
+      border: 1px solid #1f2937;
+    }
+
+    .card h3 {
+      margin-top: 0;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .card a {
+      color: var(--accent-2);
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 24px 12px;
+      border-top: 1px solid #1f2937;
+      background: #0b0b0e;
+    }
+
+    /* Modal */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 520px;
+      background: var(--panel);
+      border-radius: 18px;
+      padding: 20px;
+      border: 1px solid #1f2937;
+    }
+
+    .field {
+      margin-bottom: 12px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      color: #d1d5db;
+    }
+
+    .field input, .field textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #374151;
+      background: #0b0b0e;
+      color: var(--text);
+    }
+
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="hero-content">
+    <h1>📚 Portafolio de Lectura y Escritura</h1>
+    <p>Organiza tus enlaces y documentos en un solo lugar</p>
+  </div>
+</header>
+
+<main>
+
+  <div class="toolbar">
+
+    <!-- Zona de Enlaces -->
+    <section class="zone">
+      <div class="zone-header">
+        <h2>🔗 Zona de Enlaces</h2>
+        <button class="btn" onclick="openModal('link')">+ Agregar enlace</button>
+      </div>
+
+      <div class="grid" id="linksGrid"></div>
+      <p id="linksCount">Total de enlaces: 0</p>
+    </section>
+
+    <!-- Zona de Documentos -->
+    <section class="zone">
+      <div class="zone-header">
+        <h2>📄 Zona de Documentos</h2>
+        <button class="btn" onclick="openModal('doc')">+ Agregar documento</button>
+      </div>
+
+      <div class="grid" id="docsGrid"></div>
+      <p id="docsCount">Total de documentos: 0</p>
+    </section>
+
+  </div>
+
+</main>
+
+<footer>
+  © 2026 - Portafolio académico de Eduardo Vasquez
+</footer>
+
+<!-- Modal -->
+<div class="modal-backdrop" id="backdrop" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3 id="modalTitle">Agregar</h3>
+
+    <div class="field">
+      <label>Título</label>
+      <input id="titleInput" placeholder="Ej: Resumen capítulo 1">
+    </div>
+
+    <div class="field">
+      <label>Descripción</label>
+      <textarea id="descInput" rows="3"></textarea>
+    </div>
+
+    <div class="field">
+      <label>Enlace</label>
+      <input id="urlInput" placeholder="https://...">
+    </div>
+
+    <button class="btn secondary" onclick="closeModal()">Cancelar</button>
+    <button class="btn" onclick="saveItem()">Guardar</button>
+  </div>
+</div>
+
+<script>
+  let currentType = 'link';
+  let linkCount = 0;
+  let docCount = 0;
+
+  function openModal(type) {
+    currentType = type;
+    document.getElementById('modalTitle').textContent =
+      type === 'link' ? 'Agregar enlace' : 'Agregar documento';
+    document.getElementById('backdrop').style.display = 'flex';
+  }
+
+  function closeModal(e) {
+    if (!e || e.target.id === 'backdrop') {
+      document.getElementById('backdrop').style.display = 'none';
+      titleInput.value = '';
+      descInput.value = '';
+      urlInput.value = '';
+    }
+  }
+
+  function saveItem() {
+    const title = titleInput.value.trim();
+    const desc = descInput.value.trim();
+    const url = urlInput.value.trim();
+
+    if (!title || !url) {
+      alert("Completa el título y el enlace");
+      return;
+    }
+
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const date = new Date().toLocaleDateString();
+
+    if (currentType === 'link') {
+      card.innerHTML = `
+        <h3>${title}</h3>
+        <p>${desc}</p>
+        <p>📅 ${date}</p>
+        <a href="${url}" target="_blank">Abrir enlace</a>
+      `;
+      document.getElementById("linksGrid").prepend(card);
+      linkCount++;
+      document.getElementById("linksCount").textContent = `Total de enlaces: ${linkCount}`;
+    } else {
+      card.innerHTML = `
+        <h3>${title}</h3>
+        <p>${desc}</p>
+        <p>📅 ${date}</p>
+        <a href="${url}" target="_blank">Abrir documento</a><br>
+        <a href="${url}" download>Descargar</a>
+      `;
+      document.getElementById("docsGrid").prepend(card);
+      docCount++;
+      document.getElementById("docsCount").textContent = `Total de documentos: ${docCount}`;
+    }
+
+    closeModal();
+  }
+</script>
+
+</body>
+</html>
